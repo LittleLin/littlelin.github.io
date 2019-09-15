@@ -1,0 +1,203 @@
+<!DOCTYPE HTML>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>[翻譯] TDD 已死，測試萬歲 | Linson&#39;s Note</title>
+
+  
+  <meta name="author" content="LittleLin">
+  
+
+  
+  <meta name="description" content="技術,隨筆,雜記">
+  
+
+  
+  
+  <meta name="keywords" content="翻譯">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="[翻譯] TDD 已死，測試萬歲">
+
+  <meta property="og:site_name" content="Linson&#39;s Note">
+
+  
+  <meta property="og:image" content="/favicon.ico">
+  
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Linson&#39;s Note" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Linson&#39;s Note</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">首頁</a></li>
+      
+        <li><a href="/archives">文章歸檔</a></li>
+      
+        <li><a href="/about">關於我</a></li>
+      
+        <li><a href="/atom.xml">RSS 訂閱</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>[翻譯] TDD 已死，測試萬歲</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2014/04/26/tdd-is-dead-long-live-testing/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-04-26T09:20:00.000Z">
+          2014-04-26
+        </time>
+      </a>
+    </span>
+  </div>
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <img src="https://farm1.staticflickr.com/164/427255017_305fb49638.jpg" width="500" alt="Blue pill or the red pill" data-height="287">
+
+<h3 id="2014-04-28-Updates"><a href="#2014-04-28-Updates" class="headerlink" title="2014/04/28 Updates"></a>2014/04/28 Updates</h3><ol>
+<li>補上 DHH 原始 keynote 的影片︰<a href="http://www.justin.tv/confreaks/b/522089408" target="_blank" rel="noopener">RailsConf2014 Opening Keynote by DHH</a></li>
+<li>Uncle Bob 針對 DHH 的戰文，也寫了一篇文章來反擊︰<a href="http://blog.8thlight.com/uncle-bob/2014/04/25/MonogamousTDD.html" target="_blank" rel="noopener">Monogamous TDD</a></li>
+<li><a href="http://xdite.net/" target="_blank" rel="noopener">XDite</a> 在 4/28 也再撰文整理他的看法︰<a href="http://blog.xdite.net/posts/2014/04/28/back-to-basic" target="_blank" rel="noopener">返璞歸真 – 以最適當的方式設計軟體</a></li>
+</ol>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>昨天在 <a href="http://xdite.net/" target="_blank" rel="noopener">XDite</a> 大大的 Blog 中 (via: <a href="http://blog.xdite.net/posts/2014/04/25/railsconf-2014-2" title="RailsConf 2014 - 十週年紀念版 ( 中 )" target="_blank" rel="noopener">RailsConf 2014 - 十週年紀念版 ( 中 )</a>)，看到 RoR framework、Basecamp 公司的創辦人、<a href="http://37signals.com/rework/" title="Rework" target="_blank" rel="noopener">Rework 一書</a> (中譯書︰<a href="http://findbook.tw/book/9789862166055/basic" title="工作大解放" target="_blank" rel="noopener">工作大解放</a>) 的作者，David Heinemeier Hansson (DHH)，在 RailsConf 2014 中的 Keynote 後，發表了一篇針對 TDD 的戰文︰<a href="http://david.heinemeierhansson.com/2014/tdd-is-dead-long-live-testing.html" target="_blank" rel="noopener">TDD is dead. Long live testing.</a></p>
+<p>其實我覺得 <a href="http://xdite.net/" target="_blank" rel="noopener">XDite</a> 整理 DHH 的 talk 重點就非常完整了，雖然我自己也是 TDD 的愛好者，但像這種由業界大神所寫出來的戰文，我覺得都有很高的閱讀價值。就算對方立場和你是相反的，從對方的論點中也可以找出滿多的檢查點，來反思自己在實踐上，是不是也犯了他們所討厭的錯誤，或是從錯誤的出發點來想事情。</p>
+<p>所以我翻譯了這篇文章，除了讓自己再精讀一下 DHH 的想法外，也讓有興趣的朋友們可以多了解不同的意見，做為反思。</p>
+<p>有任何翻譯上的謬誤，都歡迎提出，謝謝！</p>
+<a id="more"></a>
+<h2 id="TDD-已死，測試萬歲-TDD-is-dead-Long-live-testing"><a href="#TDD-已死，測試萬歲-TDD-is-dead-Long-live-testing" class="headerlink" title="TDD 已死，測試萬歲 (TDD is dead. Long live testing.)"></a>TDD 已死，測試萬歲 (<em>TDD is dead. Long live testing.</em>)</h2><p>先寫測試的教義就像是禁慾式的性教育︰一個只會帶來自我厭惡和羞愧地，不現實和無效率的道德宣傳。</p>
+<p>一開始測試先行的想法並不像現在這樣。當我一開始接觸 TDD 時，它就像是個想帶領我們進入更好的軟體開發世界的友善邀請，一種對心靈的激盪 (hack)，來讓你進入測試的實務。它擴展了我的眼界，讓我了解經過良好測試的程式庫的美好，並且對於軟體的修改更有自信。</p>
+<p>測試先行就像是一套很棒的輔助輪 (<em>譯註︰training wheels，就是小朋友學單車時在後輪加裝的輪子</em>)，教我思考更深層次的測試議題，但當中也有一些想法被我很快地拋在後面。</p>
+<p>這些年來，關於測試先行的言論變得更加大聲、更加激進，然而，也更加失去風度。有時候我會被吸進了基本教義派的旋渦 - 對於沒有依循宗教的福音行事感覺到很糟糕。然後，我會在接下來的幾週，嘗試使用測試先行來進行開發，直到它開始傷害我的設計後，又再度捨棄它。</p>
+<p>這個過程很像溜溜球在自豪的兩側擺盪︰當我可以堅持基本教義的一字一句時，我感到自豪；而當我做不到這點時，我會絕望地崩潰。這就像是原本已經戒酒的人又開始喝酒，你當然要為(喝酒)這事保持沉默，至少不能公開地向大家承認這事。在公開場合，我充其量只是承認自己不是每次都使用測試先行的方式進行開發，但仍然支持測試先行這種實踐 (practice) 是「正確的做法」。我現在要收回這段話。</p>
+<p>也許使用測試優先這種違反直覺的開發方式，對於打破業界缺乏自動迴歸測試的生態是有幫助的。但也許測試先行只是一種比喻，而不應該成為軟體開發工作的每日工作教條。但不管它是怎麼開始的，它會因為損壞而只是曇花一現。支持者常使用測試先行當做一個錘子，來打擊懷疑論者，宣告他們不夠專案，不夠格來撰寫軟體，就像是試紙檢驗一樣。</p>
+<p>夠了！這種事不應該再繼續下去！我叫 David，我不以測試先行的方式開發軟體。我拒絕為此表達任何歉意，也不想再為此隱瞞。我很感激 TDD 為我打開了關於自動化迴歸測試的眼界，但我早已擺脫設計教條而繼續前行。 </p>
+<p>我建議大家在不使用 TDD，不表示這是不合格的開發方式的可能性的前提下，認真檢視這方法(TDD) 會對您的系統設計完整性帶來了什麼影響。這就像是服用紅色藥丸一樣，您可能不會喜歡之後您所看到的 (<em>譯註︰這邊的出處是電影「駭客任務」，當初莫斐斯就是拿了紅色藥丸和藍色藥丸給尼歐選擇要不要跳船</em>)。</p>
+<h3 id="所以接下來我們該何去何從呢？-So-where-do-we-go-from-here"><a href="#所以接下來我們該何去何從呢？-So-where-do-we-go-from-here" class="headerlink" title="所以接下來我們該何去何從呢？ (So where do we go from here?)"></a>所以接下來我們該何去何從呢？ (<em>So where do we go from here?</em>)</h3><p>第一步是承認問題。我認為現在我們已經做到了這一步。第二步是重新平衡從單元測試到系統測試間的頻譜 (spectrum)。目前狂熱的 TDD 的經驗導致了在測試上都聚焦於單元測試，因為這是可以驅動代碼設計的測試（這也是最初社群鼓吹測試先行的最初理由）。</p>
+<p>我不認為這是健康的。先寫單元測試導致我們產生了一堆複雜的中介物件作和間接層，以避免讓單元測試太「慢」。像資料庫存取、檔案 I/O、或是通過瀏覽器來測試系統，都會被隔離出來(<em>譯注︰一般建議每個單元測試的執行時間不能超過 500ms，另外不建議單元測試和外部資源 - 像是 DB、檔案系統 - 相依。為了達成這目標，我們常會將待測物件 A 的相依物件 B、C、D 以介面隔離，在單元測試時，使用像 Mock/Stub 的方式來注入假造的物件 B、C、D 給物件 A。一方面讓物件 A 不會存取外部資源，另一方面也讓整個單元測試夠快</em>)。這種方式帶來了一個真正可怕的怪物架構︰一堆複雜的服務物件、命令模式或其他更糟的東西。</p>
+<p>我很少撰寫在傳統意義上的單元測試︰假造所有的相依物件，來讓上千個測試可以在幾秒內測試完畢。因為它對於測試 Rails 應用程式並不是一個有用的方法，我會直接測試 active record model，讓它們透過 fixture 來存取資料庫。然後以這為基礎，在上層運行一組對於 controller 的單元測試，但對我來說，我更願意使用像 <a href="https://github.com/jnicklas/capybara" target="_blank" rel="noopener">Capybara</a> 或類似的系統測試工具，來取代這些單元測試。</p>
+<p>我認為這是我們應該前進的方向︰減少對於單元測試的重視。因為我們不再做測試先行的設計實踐，而是更加重視 - 喔，是的 - 執行速度更慢的系統測試。(順便補充一下，由於平行化和雲端基礎建設的成熟，系統測試其實也不會比單元測試慢得這麼多)</p>
+<p>Rails 可以幫助大家做這種轉移。今天我們不鼓勵完整的系統測試，在開發的堆疊中也沒有預設的答案，這是一個我們將要修復的錯誤，但您不必等到這件事發生，讓 <a href="https://github.com/jnicklas/capybara" target="_blank" rel="noopener">Capybar</a> 從今天就介入您的開發週期，如此一來您將會有我們正朝著美好明天的正面思維。</p>
+<p>但首先，讓我們先深呼吸一下。我們正在驅趕一些神聖的奶牛進屠宰場，這是痛苦和血腥的過程。TDD 是如此成功，以至於它結合了許多程式設計師。TDD 所代表的是不只是它在開發方法上的技法，還有背後以此技法開發的從業人員。(<em>TDD is not just what they do, it’s who they are.</em>) 我們必須消除在我們面前巨大社群的思考慣性，而這將需要一些時間。</p>
+<p>我們能做的最糟糕的事情是再跳到另一個關於測試的宗教，我可以想像那個新宗教的標語是「只做系統測試！ 」。請不要再度跳到那個坑去。</p>
+<p>是的，測試優先對我來說已經死了。但比起在它的墳墓上跳舞，我更想做的是向它的貢獻表達我的敬意。它在我們的(開發方法論)歷史上占有一個重要的階段，但現在是時候讓我們繼續前行了。</p>
+<p>測試萬歲！(Long live testing.)</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/翻譯/">翻譯</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'littlelin';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2019 LittleLin
+    
+  </p>
+</footer>
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-160596-11', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

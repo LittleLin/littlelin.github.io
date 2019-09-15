@@ -1,0 +1,257 @@
+<!DOCTYPE HTML>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>使用 MSTest 撰寫單元測試套路整理 (1) - 基本技巧 | Linson&#39;s Note</title>
+
+  
+  <meta name="author" content="LittleLin">
+  
+
+  
+  <meta name="description" content="技術,隨筆,雜記">
+  
+
+  
+  
+  <meta name="keywords" content="Unit Test,MSTest">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="使用 MSTest 撰寫單元測試套路整理 (1) - 基本技巧">
+
+  <meta property="og:site_name" content="Linson&#39;s Note">
+
+  
+  <meta property="og:image" content="/favicon.ico">
+  
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Linson&#39;s Note" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Linson&#39;s Note</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">首頁</a></li>
+      
+        <li><a href="/archives">文章歸檔</a></li>
+      
+        <li><a href="/about">關於我</a></li>
+      
+        <li><a href="/atom.xml">RSS 訂閱</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>使用 MSTest 撰寫單元測試套路整理 (1) - 基本技巧</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/10/31/mstest-1-basic/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-10-31T06:46:46.000Z">
+          2017-10-31
+        </time>
+      </a>
+    </span>
+  </div>
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2><span id="前言">前言</span></h2><p>Visual Studio 內建的 <a href="https://docs.microsoft.com/en-us/visualstudio/test/unit-test-your-code" target="_blank" rel="noopener">MSTest 測試框架(test framework)</a>，是目前我在工作上使用的主力。當然相較社群愛用的 <a href="https://xunit.github.io/" target="_blank" rel="noopener">xUnit</a>、<a href="http://nunit.org/" target="_blank" rel="noopener">NUnit</a> 來說，它的功能上有點過於陽春，但搭配一些好用的社群 library，它仍然可以完成我工作上大部份的需求。</p>
+<p>最近因為部門有許多新人來報到，有許多關於測試上的 FAQ。被問多了，讓我產生整理 MsTest 在撰寫單元測試上一些方式的想法。當然這些都是套路，只是程式碼，實務上究竟要怎麼利用這些技巧，還是要依照專案的情境做調整。這才是最考驗工程師能力的地方，也是未來可以自我修養的部份。</p>
+<a id="more"></a>
+
+<h2><span id="目錄">目錄</span></h2><!-- toc -->
+
+<ul>
+<li><a href="#1-基本測試結構">1. 基本測試結構</a><ul>
+<li><a href="#production-code-calculator">Production Code (Calculator)</a></li>
+<li><a href="#test-code">Test Code</a></li>
+</ul>
+</li>
+<li><a href="#2-驗証是否拋出例外">2. 驗証是否拋出例外</a></li>
+<li><a href="#21-驗証是否拋出例外-基本作法">2.1 驗証是否拋出例外 - 基本作法</a></li>
+<li><a href="#22-驗証是否拋出例外-使用-mstest-內建作法">2.2 驗証是否拋出例外 - 使用 MsTest 內建作法</a></li>
+<li><a href="#23-驗証是否拋出例外-使用-fluentassertions">2.3 驗証是否拋出例外 - 使用 FluentAssertions</a></li>
+<li><a href="#3-驗証測試物件狀態">3. 驗証測試物件狀態</a><ul>
+<li><a href="#production-code-bankaccount">Production Code (BankAccount)</a></li>
+<li><a href="#test-code-1">Test Code</a></li>
+</ul>
+</li>
+<li><a href="#小結">小結</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="1-基本測試結構">1. 基本測試結構</span></h2><p>下面是個簡單的加法計算機類別 <code>Calculator</code>，方法 <code>Add()</code> 接受 2 個參數 <code>number1</code> 和 <code>number2</code>，並回傳這 2 個數字的加總結果。</p>
+<h3><span id="production-code-calculator">Production Code (Calculator)</span></h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Calculator</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Add</span>(<span class="params"><span class="keyword">int</span> number1, <span class="keyword">int</span> number2</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> number1 + number2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>這時候我們可以看看，要如何測試 <code>Add()</code> 方法是否正確？下面是基本的測試程式碼︰</p>
+<h3><span id="test-code">Test Code</span></h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TestClass</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CalculatorTest</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">TestMethod</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> Add_3加<span class="number">4</span>_回傳值應為<span class="number">7</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Arrange</span></span><br><span class="line">        <span class="keyword">var</span> target = <span class="keyword">new</span> Calculator();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Act</span></span><br><span class="line">        <span class="keyword">var</span> actual = target.Add(<span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Assert</span></span><br><span class="line">        <span class="keyword">var</span> expected = <span class="number">7</span>;</span><br><span class="line">        Assert.AreEqual(expected, actual);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到測試程式，由 3 個段落組成︰</p>
+<h4><span id="1-arrange">1. Arrange</span></h4><p>建立、安排測試環境。</p>
+<p>本例中我們是建立待測類別 <code>Calculator</code> 的物件，慣例上我們會以 <code>target</code> 或 <code>sut</code> (<em>subject under test</em>) 變數來表達待測物件。</p>
+<h4><span id="2-act">2. Act</span></h4><p>呼叫待測類別上，我們想測試的目標方法。</p>
+<p>本例中我們是呼叫 <code>Add()</code> 方法，慣例上我們會以 <code>actual</code> 變數表達待測物件的回傳值，或是物件的現實狀態。</p>
+<h4><span id="3-assert">3. Assert</span></h4><p>驗証待測物件的行為是否符合預期。</p>
+<p>本例中我們是驗証 <code>Add()</code> 的回傳值，是否如同我們預期，慣例上我們以 <code>expected</code> 表達我們預期的行為值，一般會以<strong>常數</strong>表達。</p>
+<p><a href="#目錄">回到目錄</a></p>
+<h2><span id="2-驗証是否拋出例外">2. 驗証是否拋出例外</span></h2><p><strong>錯誤處理</strong>是開發程式的基本議題，我們會適當的以 Exception 例外表達錯誤狀況，並附上夠清楚的 debug 相關資訊以利除錯。</p>
+<p>比方說前例中的 <code>Calculator</code> 類別中的 <code>Add()</code> 方法，PO 要求參數「不得為負值」，因此我們會將 production code 改為以下內容︰</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Calculator</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Add</span>(<span class="params"><span class="keyword">int</span> number1, <span class="keyword">int</span> number2</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (number1 &lt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ArgumentException(<span class="string">"參數 number1 應為大於等於 0 的正整數"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (number2 &lt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ArgumentException(<span class="string">"參數 number2 應為大於等於 0 的正整數"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> number1 + number2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>針對這樣的 production code，該如何撰寫測試程式，確保程式拋出的例外資訊，真的如同我們所預期的呢？</p>
+<p><a href="#目錄">回到目錄</a></p>
+<h2><span id="21-驗証是否拋出例外-基本作法">2.1 驗証是否拋出例外 - 基本作法</span></h2><p>根據目前的理解，我們可能會將在 <a href="#1-基本測試結構">基本測試結構</a> 學到的測試程式寫法，改為以下的內容︰</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TestClass</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CalculatorTest</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">TestMethod</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> Add_第一個數值為負數_應拋出例外()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Arrange</span></span><br><span class="line">        <span class="keyword">var</span> target = <span class="keyword">new</span> Calculator();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> exceptionIsThrown = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Act</span></span><br><span class="line">            target.Add(<span class="number">-3</span>, <span class="number">4</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (ArgumentException e)</span><br><span class="line">        &#123;</span><br><span class="line">            exceptionIsThrown = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Assert</span></span><br><span class="line">            <span class="keyword">var</span> actual = e.Message;</span><br><span class="line">            <span class="keyword">var</span> expected = <span class="string">"參數 number1 應為大於等於 0 的正整數"</span>;</span><br><span class="line">            </span><br><span class="line">            Assert.AreEqual(expected, actual);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 驗証 exception 真有拋出來</span></span><br><span class="line">        Assert.IsTrue(exceptionIsThrown);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述程式看似可行，但有一些明顯的缺點︰</p>
+<ol>
+<li>Arrange-Act-Assert 的結構被破壞，程式可讀性不見了。</li>
+<li>為了驗証 <code>Add()</code> 真的有拋出我們預期的 Exception，我們還要使用一個 <code>exceptionIsThrown</code> 的變數，記錄例外有被丟出來。</li>
+</ol>
+<p>有沒有更好的做法呢？</p>
+<p><a href="#目錄">回到目錄</a></p>
+<h2><span id="22-驗証是否拋出例外-使用-mstest-內建作法">2.2 驗証是否拋出例外 - 使用 MsTest 內建作法</span></h2><p>其實 MsTest 有內建的 <code>ExpectedException</code> 屬性(Attribute)，可以方便我們達成目錄，以下為修改後的測試程式︰</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TestClass</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CalculatorTest</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">TestMethod</span>]</span><br><span class="line">    [<span class="meta">ExpectedException(typeof(ArgumentException))</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> Add_第一個數值為負數_應拋出例外()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Arrange</span></span><br><span class="line">        <span class="keyword">var</span> target = <span class="keyword">new</span> Calculator();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Act</span></span><br><span class="line">        target.Add(<span class="number">-3</span>, <span class="number">4</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>這樣的測試程式，看似完美的解決上述可讀性問題，但仍然有個缺點是，<code>ExpectedException</code> 屬性只能協助確認，<code>Add()</code> 是否有拋出 <code>ArgumentException</code> 例外，但谷無法讓我們驗証 Exception 的訊息是否為我們所預期的？</p>
+<p>還有沒有更好的做法呢？</p>
+<p><a href="#目錄">回到目錄</a></p>
+<h2><span id="23-驗証是否拋出例外-使用-fluentassertions">2.3 驗証是否拋出例外 - 使用 FluentAssertions</span></h2><p>最後為您介紹一個好用工具︰<a href="http://fluentassertions.com/" target="_blank" rel="noopener">FluentAssertions</a>，可以完美解決上述問題。使用 FluentAssertions 後的測試程式碼如下︰</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TestClass</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CalculatorTest</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">TestMethod</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> Add_第一個數值為負數_應拋出例外()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Arrange</span></span><br><span class="line">        <span class="keyword">var</span> target = <span class="keyword">new</span> Calculator();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Act</span></span><br><span class="line">        Action comparison = () =&gt; &#123; target.Add(<span class="number">-3</span>, <span class="number">4</span>);  &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Assert</span></span><br><span class="line">        comparison.ShouldThrow&lt;ArgumentException&gt;().WithMessage(<span class="string">"參數 number1 應為大於等於 0 的正整數"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，搭配了 FluentAssertions，我們既可以維持測試程式的可讀性，又可以方便達成我們的測試目標，方便使用。</p>
+<p><a href="#目錄">回到目錄</a></p>
+<h2><span id="3-驗証測試物件狀態">3. 驗証測試物件狀態</span></h2><p>上述的例子中，都只是驗証方法(Method)回傳的值是否正確，但別忘記了，C# 是 OOP 語言，很多時候我們呼叫物件的方法時，方法本身除了回傳結果值之外，可能也會連帶改變了物件本身的狀態(State)值，那我們該如何進行這方面的測試呢？</p>
+<p>舉個例子，假設我們有一個銀行帳戶 <code>BankAccount</code> 類別，本類別中維護了帳戶中的餘額(Balance)狀態，而一旦存戶存錢(DepositMondey)後，帳戶中的餘額就會發生變動。我們的 production code 示意如下︰</p>
+<h3><span id="production-code-bankaccount">Production Code (BankAccount)</span></h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BankAccount</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 帳號餘額</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> Balance &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Bank Account 建構子</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="initialAmount"&gt;</span>帳戶初始餘額<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BankAccount</span>(<span class="params"><span class="keyword">int</span> initialAmount</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.Balance = initialAmount;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 存款</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="amount"&gt;</span>存入數量<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">DepositMoney</span>(<span class="params"><span class="keyword">int</span> amount</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.Balance += amount;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>針對狀態的驗証，我們就不是單純驗証方法的回傳值，而是改為驗証方法執行後，變更後的物件狀態是否為我們預期的值。如下︰</p>
+<h3><span id="test-code">Test Code</span></h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TestClass</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BankAccountTest</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">TestMethod</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> DepositMoney_存款<span class="number">100</span>元進餘額為<span class="number">33</span>元的帳戶中_帳戶餘額應為<span class="number">133</span>元()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Arrange</span></span><br><span class="line">        <span class="keyword">var</span> target = <span class="keyword">new</span> BankAccount(<span class="number">33</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Act</span></span><br><span class="line">        target.DepositMoney(<span class="number">100</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Assert</span></span><br><span class="line">        <span class="keyword">var</span> expected = <span class="number">133</span>;</span><br><span class="line">        Assert.AreEqual(expected, target.Balance);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到我們驗証的對象不再是 <code>DepositMoney()</code> 的回傳值(事實上 <code>DepositMoney()</code> 的回傳值型別為 <code>void</code>)，而改為驗証物件的 <code>Balance</code> 狀態是否為我們預期的值。</p>
+<p><a href="#目錄">回到目錄</a></p>
+<h2><span id="小結">小結</span></h2><p>本文針對如何使用 MSTest 撰寫測試程式，做了簡單的說明。但目前我們看到的範例，都只有 <code>BankAccount</code> 一個類別單獨存在。實務上我們進行程式開發，當然不會那麼單純。在<a href="/2017/11/01/mstest-2-test-doubles/">下一篇文章</a>中，將針對相依性物件的測試方式進行說明，我們下次見。</p>
+<p><a href="#目錄">回到目錄</a></p>
+<h2><span id="references">References</span></h2><ul>
+<li><a href="https://dotblogs.com.tw/hatelove/2012/11/07/learning-tdd-in-30-days-day3-how-to-write-a-unit-test-code" target="_blank" rel="noopener">[30 天快速上手 TDD][Day 3] 動手寫 Unit Test</a></li>
+<li><a href="http://wiki.c2.com/?ArrangeActAssert" target="_blank" rel="noopener">Arrange Act Assert</a></li>
+<li><a href="http://fluentassertions.com/" target="_blank" rel="noopener">Fluent Assertions 官網</a></li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Unit-Test/">Unit Test</a><a href="/tags/MSTest/">MSTest</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'littlelin';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2019 LittleLin
+    
+  </p>
+</footer>
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-160596-11', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

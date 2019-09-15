@@ -1,0 +1,255 @@
+<!DOCTYPE HTML>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>使用 MSTest 撰寫單元測試套路整理(3) - 拾遺補缺 | Linson&#39;s Note</title>
+
+  
+  <meta name="author" content="LittleLin">
+  
+
+  
+  <meta name="description" content="技術,隨筆,雜記">
+  
+
+  
+  
+  <meta name="keywords" content="Unit Test,MSTest">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="使用 MSTest 撰寫單元測試套路整理(3) - 拾遺補缺">
+
+  <meta property="og:site_name" content="Linson&#39;s Note">
+
+  
+  <meta property="og:image" content="/favicon.ico">
+  
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Linson&#39;s Note" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Linson&#39;s Note</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">首頁</a></li>
+      
+        <li><a href="/archives">文章歸檔</a></li>
+      
+        <li><a href="/about">關於我</a></li>
+      
+        <li><a href="/atom.xml">RSS 訂閱</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>使用 MSTest 撰寫單元測試套路整理(3) - 拾遺補缺</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/01/06/mstest-3-miscellaneous/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-01-06T06:00:00.000Z">
+          2018-01-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在前 2 篇文章中，我整理了自己常使用的測試技巧 (<a href="/2017/10/31/mstest-1-basic/">第一篇</a>、<a href="/2017/11/01/mstest-2-test-doubles/">第二篇</a>)，本文繼續來整理一些實務撰寫測試上有用的小技巧，其中有些技巧是屬於 MSTest 這個測試框架專屬的行為。</p>
+<a id="more"></a>
+
+<h2 id="目錄"><a href="#目錄" class="headerlink" title="目錄"></a>目錄</h2><!-- toc -->
+
+<h2 id="6-當程式使用到日期資訊時該如何進行測試？"><a href="#6-當程式使用到日期資訊時該如何進行測試？" class="headerlink" title="6. 當程式使用到日期資訊時該如何進行測試？"></a>6. 當程式使用到日期資訊時該如何進行測試？</h2><p>我們在系統開發中，很常使用 <code>DateTime</code> 類別中的各種日期資訊，比方說我們在比對訂單是否逾期未出貨，或是客戶逾期未取貨等，都會使用到像 <code>DateTime.Now</code> 等屬性 API。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Order</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 下訂日期</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> DateTime OrderDate;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 是否為逾期未取貨訂單</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">bool</span> IsExpiredOrder</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> (DateTime.Now.Subtract(<span class="keyword">this</span>.OrderDate).Days &gt;= <span class="number">3</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 略...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>這時候當我們想要測試 2 種測試案例︰<em>逾期訂單</em>與<em>未逾期訂單時</em>時，可以想像因為 <code>DateTime.Now</code> 是系統當下時間，所以我們很難照我們的期待，指定日期 (1/3 或 1/4) 來進行測試︰</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TestClass</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderUnitTests</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">TestMethod</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> IsExpiredOrder_下單日為<span class="number">1</span>月<span class="number">1</span>號_今日日期為<span class="number">1</span>月<span class="number">3</span>號_視為未逾期訂單()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 略...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">TestMethod</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> IsExpiredOrder_下單日為<span class="number">1</span>月<span class="number">1</span>號_今日日期為<span class="number">1</span>月<span class="number">4</span>號_視為逾期訂單()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 略...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>這時候照之前的做法，我們可能會想在 <code>Order</code> 類別中開一個接口，將 <code>DateTime.Now</code> 由測試程式注入，但因為 <code>DateTime</code> 的用途非常多，如果每個使用到它的類別我們都這樣進行測試的話，並不是非常好的做法。</p>
+<p><a href="https://www.manning.com/books/the-art-of-unit-testing-second-edition" target="_blank" rel="noopener">The Art of Unit Testing</a> 一書中提出了一個不錯的方式，就是將 <code>DateTime</code> 類別給抽象化成一個新的 <code>DateUtility</code> 類別，並要求所有 Production Code 都改使用 <code>DateUtility</code> 類別來取得日期資訊︰</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Order</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 下訂日期</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> DateTime OrderDate;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 是否為逾期未取貨訂單</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">bool</span> IsExpiredOrder</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> (DateUtility.Now.Subtract(<span class="keyword">this</span>.OrderDate).Days &gt;= <span class="number">3</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 略...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">DateUtility</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 由測試程式指定日期的接口，可將可視範圍訂為 internal，確保只有測試程式可以存取此變數</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">internal</span> <span class="keyword">static</span> DateTime? PredefindDate;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 如果沒有指定日期，則直接回傳系統時間</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> DateTime Now</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> PredefindDate ?? DateTime.Now;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此時在我們的測試程式中，就可以針對目前的時間，多了更多的掌控性，測試程式寫法如下︰</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TestClass</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderUnitTests</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">TestMethod</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> IsExpiredOrder_下單日為<span class="number">1</span>月<span class="number">1</span>號_今日日期為<span class="number">1</span>月<span class="number">3</span>號_視為未逾期訂單()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Arrange</span></span><br><span class="line">        <span class="keyword">var</span> order = <span class="keyword">new</span> Order();</span><br><span class="line">        order.OrderDate = <span class="keyword">new</span> DateTime(<span class="number">2017</span>, <span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        DateUtility.PredefindDate = <span class="keyword">new</span> DateTime(<span class="number">2017</span>, <span class="number">1</span>, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Act</span></span><br><span class="line">        <span class="keyword">var</span> isExpiredOrder = order.IsExpiredOrder;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Assert</span></span><br><span class="line">        Assert.AreEqual(<span class="literal">false</span>, isExpiredOrder);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">TestMethod</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> IsExpiredOrder_下單日為<span class="number">1</span>月<span class="number">1</span>號_今日日期為<span class="number">1</span>月<span class="number">4</span>號_視為逾期訂單()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Arrange</span></span><br><span class="line">        <span class="keyword">var</span> order = <span class="keyword">new</span> Order();</span><br><span class="line">        order.OrderDate = <span class="keyword">new</span> DateTime(<span class="number">2017</span>, <span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        DateUtility.PredefindDate = <span class="keyword">new</span> DateTime(<span class="number">2017</span>, <span class="number">1</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Act</span></span><br><span class="line">        <span class="keyword">var</span> isExpiredOrder = order.IsExpiredOrder;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Assert</span></span><br><span class="line">        Assert.AreEqual(<span class="literal">true</span>, isExpiredOrder);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">TestCleanup</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Cleanup</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        DateUtility.PredefindDate = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如此針對日期資訊這種使用範圍如此廣的物件，我們就可以使用比較清楚的方式進行測試。針對這個議題，<a href="https://stackoverflow.com" target="_blank" rel="noopener">StackOverflow</a> 上的 <a href="https://stackoverflow.com/questions/2425721/unit-testing-datetime-now" target="_blank" rel="noopener">Unit Testing: DateTime.Now</a> 討論串，也非常推薦一讀。</p>
+<p>另外可以留意，我在上面的測試中加入 Cleanup 的程式，確保在每個 unit test 執行完成後，將 <code>PredefinedDate</code> 日期資訊給歸零，以避免各個 test case 間彼此間互相影響。</p>
+<p><a href="#目錄">回到目錄</a></p>
+<h2 id="7-如何部署測試需要的檔案？"><a href="#7-如何部署測試需要的檔案？" class="headerlink" title="7. 如何部署測試需要的檔案？"></a>7. 如何部署測試需要的檔案？</h2><p>有時候我們在測試前，需要部署測試需要的檔案。比方說未來我們會提到的 <a href="https://docs.microsoft.com/zh-tw/sql/database-engine/configure-windows/sql-server-2016-express-localdb" target="_blank" rel="noopener">SQL Server LocalDB</a>，通常在使用上，會先將測試資料庫 .mdf 檔先部署上測試資料夾，再啟動 LocalDB instance。這時候我們該怎麼設定呢？</p>
+<p>在 MSTest，我們可以使用測試設定檔來達成這個目標。以下為 Visual Studio 的操作︰</p>
+<p>假設我們的測試專案中，有個 <code>TestMaterials\</code> 資料夾，內含我們所需要的測試檔︰</p>
+<img src="/2018/01/06/mstest-3-miscellaneous/TestProjectStructure.png">
+
+<p>我們該怎麼設定讓 <code>TestMaterials\</code> 資料夾的檔案被部署出去呢？首先我們為整個方案(Solution)，新增一個測試設定檔︰</p>
+<img src="/2018/01/06/mstest-3-miscellaneous/AddTestSettingsFile.png">
+
+<p>再來我們啓用部署測試檔案設定，並選擇將 <code>TestMaterials\</code> 目錄下的所有檔案，給部署到測試資料夾中︰</p>
+<img src="/2018/01/06/mstest-3-miscellaneous/EnableDeploymentSetting.png">
+
+<p>這樣我們的檔案部署設定就完成了。</p>
+<p>而在執行測試時，需要告訴 Visual Studio，以我們設定的測試設定來進行測試︰</p>
+<img src="/2018/01/06/mstest-3-miscellaneous/SelectTestSettingsFile.png">
+
+<p>但在測試前要留意一個小地方，因為如果測試沒有出現紅燈的話，MSTest 預設會在測試完成後，將測試相關檔案給刪除。為了証實我們的設定是有效的，我們可以加入一個一定會紅燈的測試案例︰</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TestClass</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UnitTest1</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">TestMethod</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestMethod1</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Assert.AreEqual(<span class="literal">true</span>, <span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>現在我們可以執行測試，看看結果如何。可以看到在整個方案目錄下，會多了一個 <code>TestResults\</code> 資料夾︰</p>
+<img src="/2018/01/06/mstest-3-miscellaneous/TestResultsFolder.png">
+
+<p>而整個 <code>TestResults\</code> 資料夾的結構長得像這樣︰</p>
+<img src="/2018/01/06/mstest-3-miscellaneous/TestResultsFolderStructure.png">
+
+<p>我們可以觀察到，在每次測試時行的時候，MSTest 會執行以下動作︰</p>
+<ol>
+<li>在方案的目錄下，建立一個 <code>TestResults\</code> 資料夾</li>
+<li>以目前的時間，建立一個測試用資料夾 (上圖中的 <em>jonalin</em> 開頭的資料夾)，在測試用資料夾中建立 <code>In\</code> 與 <code>Out\</code> 子資料夾</li>
+<li>將測試設定檔 (TestProject.testsettings) 中，設定要部署的檔案，複製到 <code>Out\</code> 資料夾下</li>
+</ol>
+<p>這時候我們可以在檔案總管中，瀏覽看看 <code>Out\</code> 資料夾的內容，會發現我們指定的 <code>Test.txt</code> 檔案，已被複製到 <code>Out\</code> 資料夾中︰</p>
+<img src="/2018/01/06/mstest-3-miscellaneous/DeploymentResult.png">
+
+<p><a href="#目錄">回到目錄</a></p>
+<h2 id="8-如何讓測試以平行處理方式執行？"><a href="#8-如何讓測試以平行處理方式執行？" class="headerlink" title="8. 如何讓測試以平行處理方式執行？"></a>8. 如何讓測試以平行處理方式執行？</h2><p>當我們測試程式越寫越多，這時候我們就會發現測試專案的執行時間越來越長，尤其當我們的測試程式不再單純是單元測試，而是牽扯到網路或是資料庫的整合測試時，測試程式執行的時間就會隨著測試案例數量的成長而拉長。我們有沒有什麼辦法可以加速測試專案的執行時間呢？</p>
+<p>針對這個議題，MSTest 提供了讓測試專案可以平行處理執行(Parallel Execute) 的能力，讓我們先假設我們有 2 個測試案例，當中非常單純，就是使用 <code>Thread.Sleep()</code> API 各自睡眠 10 秒鐘︰</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TestClass</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UnitTest1</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">TestMethod</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestMethod1</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Thread.Sleep(<span class="number">10000</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">TestMethod</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestMethod2</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Thread.Sleep(<span class="number">10000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>這時候在沒有做任何設定的前提下，MSTest 會以單執行緒執行，此時執行測試專案時，我們可以預期整個專案的執行時間至少為 20 秒起跳︰</p>
+<img src="/2018/01/06/mstest-3-miscellaneous/SingleThreadExecution.png">
+
+<p>實驗的結果也如我們所預期，那我們該如何設定，讓 MSTest 可以多執行緒的方式來執行呢？參考 MSTest 的官方說明 <a href="https://blogs.msdn.microsoft.com/vstsqualitytools/2009/12/01/executing-unit-tests-in-parallel-on-a-multi-cpucore-machine/" target="_blank" rel="noopener">Executing Unit Tests in parallel on a multi-CPU/core machine</a>，我們可以在方案總管中，按右鍵編輯上一節 <a href="#7-如何部署測試需要的檔案">7. 如何部署測試需要的檔案？</a> 所建立的 TestProject.testsettings 檔︰</p>
+<img src="/2018/01/06/mstest-3-miscellaneous/EditTestSettingsFile.png">
+
+<p>並在 TestProject.testsettings 背後的 XML 中，找到 <code>&lt;Execution&gt;</code> 標籤，並加入 <code>parallelTestCount=&quot;2&quot;</code> 屬性，要求 MSTest 以 2 個 thread 來執行我們的測試專案︰</p>
+<img src="/2018/01/06/mstest-3-miscellaneous/ParallelExecutionSetting.png">
+
+<p>再以上節說明的，讓 MSTest 使用我們的測設設定 TestProject.testsettings 來執行測試專案。執行結果如下，可以看到我們的執行時間由原本的 21 秒降低到了 14 秒，效果還滿顯著的︰</p>
+<img src="/2018/01/06/mstest-3-miscellaneous/ParallelExecution.png">
+
+<p>最後需要留意的是，雖然技術上我們可以平行處理方式來執行測試案例，但實際上要開啟這樣的設定，必須確保我們的測試案例，彼此間是 Thread-safe 的，這就進一步考驗我們對於整個測試專案的架構設計能力。</p>
+<p>比方我們在 <a href="#6-當程式使用到日期資訊時該如何進行測試">6. 當程式使用到日期資訊時該如何進行測試？</a> 一節中，針對時間 <code>DateTime</code> 隔離的做法，在多執行緒的狀況下，測試案例間彼此可能就會互相干擾。這方面相關的考量非常多，在此就不展開，留待未來再做說明吧。</p>
+<p><a href="#目錄">回到目錄</a></p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ol>
+<li><a href="https://www.manning.com/books/the-art-of-unit-testing-second-edition" target="_blank" rel="noopener">The Art of Unit Testing</a></li>
+<li><a href="https://stackoverflow.com/questions/2425721/unit-testing-datetime-now" target="_blank" rel="noopener">Unit Testing: DateTime.Now</a></li>
+<li><a href="https://msdn.microsoft.com/en-us/library/ms182475.aspx" target="_blank" rel="noopener">How to: Deploy Files for Tests</a></li>
+<li><a href="https://blogs.msdn.microsoft.com/vstsqualitytools/2009/12/01/executing-unit-tests-in-parallel-on-a-multi-cpucore-machine/" target="_blank" rel="noopener">Executing Unit Tests in parallel on a multi-CPU/core machine</a></li>
+</ol>
+<p><a href="#目錄">回到目錄</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Unit-Test/">Unit Test</a><a href="/tags/MSTest/">MSTest</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'littlelin';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2019 LittleLin
+    
+  </p>
+</footer>
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-160596-11', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>
