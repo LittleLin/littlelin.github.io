@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Linson&#39;s Note</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://blog.littlelin.me/"/>
+  <updated>2019-09-15T03:03:33.175Z</updated>
+  <id>https://blog.littlelin.me/</id>
+  
+  <author>
+    <name>LittleLin</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>在 Mac 下架設 MySQL Server 並啟用 SSL 加密功能</title>
+    <link href="https://blog.littlelin.me/2018/03/25/mysql-server-with-ssl-on-mac/"/>
+    <id>https://blog.littlelin.me/2018/03/25/mysql-server-with-ssl-on-mac/</id>
+    <published>2018-03-25T12:15:17.000Z</published>
+    <updated>2019-09-15T03:03:33.175Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;說明&quot;&gt;&lt;a href=&quot;#說明&quot; class=&quot;headerlink&quot; title=&quot;說明&quot;&gt;&lt;/a&gt;說明&lt;/h2&gt;&lt;p&gt;最近因為工作所需，需要使用 .NET 連接 MySQL Server。而不知道為什麼在 .NET 下，使用 SSL 加密功能連接 MySQL 總是會有問題。想想還是自己架設一台 MySQL 測試機做為對照組，看來能不能找出問題的原因。&lt;/p&gt;
+&lt;p&gt;本篇為 Mac 環境下架設 MySQL Server 的步驟整理。&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="Mac" scheme="https://blog.littlelin.me/tags/Mac/"/>
+    
+      <category term="MySQL" scheme="https://blog.littlelin.me/tags/MySQL/"/>
+    
+      <category term="SSL" scheme="https://blog.littlelin.me/tags/SSL/"/>
+    
+      <category term="TLS" scheme="https://blog.littlelin.me/tags/TLS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用 MSTest 撰寫單元測試套路整理(3) - 拾遺補缺</title>
+    <link href="https://blog.littlelin.me/2018/01/06/mstest-3-miscellaneous/"/>
+    <id>https://blog.littlelin.me/2018/01/06/mstest-3-miscellaneous/</id>
+    <published>2018-01-06T06:00:00.000Z</published>
+    <updated>2018-01-07T07:39:42.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;在前 2 篇文章中，我整理了自己常使用的測試技巧 (&lt;a href=&quot;/2017/10/31/mstest-1-basic/&quot;&gt;第一篇&lt;/a&gt;、&lt;a href=&quot;/2017/11/01/mstest-2-test-doubles/&quot;&gt;第二篇&lt;/a&gt;)，本文繼續來整理一些實務撰寫測試上有用的小技巧，其中有些技巧是屬於 MSTest 這個測試框架專屬的行為。&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="Unit Test" scheme="https://blog.littlelin.me/tags/Unit-Test/"/>
+    
+      <category term="MSTest" scheme="https://blog.littlelin.me/tags/MSTest/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>從 Evernote 搬家到 Bear</title>
+    <link href="https://blog.littlelin.me/2018/01/01/moving-from-evernote-to-bear-writer/"/>
+    <id>https://blog.littlelin.me/2018/01/01/moving-from-evernote-to-bear-writer/</id>
+    <published>2018-01-01T10:44:00.000Z</published>
+    <updated>2018-01-01T11:26:16.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;img src=&quot;/2018/01/01/moving-from-evernote-to-bear-writer/goodbye.png&quot; title=&quot;再見了，Evernote!&quot;&gt;
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Blog 重開機 &amp; 搬家到 GitHub Pages</title>
+    <link href="https://blog.littlelin.me/2017/12/23/hello-world/"/>
+    <id>https://blog.littlelin.me/2017/12/23/hello-world/</id>
+    <published>2017-12-23T12:00:00.000Z</published>
+    <updated>2017-12-30T06:36:38.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;還有很多舊文要慢慢搬 (或乾脆不搬了，重寫)，一步一步來囉！&lt;/p&gt;
+&lt;p&gt;趁著年末，想說新的一年，將好久沒寫的 Blog 給重開機一下。就趁放假時，克服一下懶病，將 Blog 給重新設定了一下。原本以為很簡單，但真的用下去也是花了快 2 天，稍徵記錄一下歷程，也算是練練碼字的手感好了。&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>使用 MSTest 撰寫單元測試套路整理 (2) - 處理物件相依</title>
+    <link href="https://blog.littlelin.me/2017/11/01/mstest-2-test-doubles/"/>
+    <id>https://blog.littlelin.me/2017/11/01/mstest-2-test-doubles/</id>
+    <published>2017-11-01T06:00:00.000Z</published>
+    <updated>2017-12-29T01:56:54.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;本篇文章主要是針對測試替身 (Test Doubles) 測試方式的一些套路技巧說明。&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="Unit Test" scheme="https://blog.littlelin.me/tags/Unit-Test/"/>
+    
+      <category term="MSTest" scheme="https://blog.littlelin.me/tags/MSTest/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用 MSTest 撰寫單元測試套路整理 (1) - 基本技巧</title>
+    <link href="https://blog.littlelin.me/2017/10/31/mstest-1-basic/"/>
+    <id>https://blog.littlelin.me/2017/10/31/mstest-1-basic/</id>
+    <published>2017-10-31T06:46:46.000Z</published>
+    <updated>2019-09-15T03:02:23.239Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Visual Studio 內建的 &lt;a href=&quot;https://docs.microsoft.com/en-us/visualstudio/test/unit-test-your-code&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;MSTest 測試框架(test framework)&lt;/a&gt;，是目前我在工作上使用的主力。當然相較社群愛用的 &lt;a href=&quot;https://xunit.github.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;xUnit&lt;/a&gt;、&lt;a href=&quot;http://nunit.org/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;NUnit&lt;/a&gt; 來說，它的功能上有點過於陽春，但搭配一些好用的社群 library，它仍然可以完成我工作上大部份的需求。&lt;/p&gt;
+&lt;p&gt;最近因為部門有許多新人來報到，有許多關於測試上的 FAQ。被問多了，讓我產生整理 MsTest 在撰寫單元測試上一些方式的想法。當然這些都是套路，只是程式碼，實務上究竟要怎麼利用這些技巧，還是要依照專案的情境做調整。這才是最考驗工程師能力的地方，也是未來可以自我修養的部份。&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="Unit Test" scheme="https://blog.littlelin.me/tags/Unit-Test/"/>
+    
+      <category term="MSTest" scheme="https://blog.littlelin.me/tags/MSTest/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[社群分享] 如何使用 OData 來加速測試效率 @ Test Corner</title>
+    <link href="https://blog.littlelin.me/2017/08/17/ru-he-shi-yong-odata-lai-jia-su-ce-shi-xiao-lu/"/>
+    <id>https://blog.littlelin.me/2017/08/17/ru-he-shi-yong-odata-lai-jia-su-ce-shi-xiao-lu/</id>
+    <published>2017-08-17T15:00:00.000Z</published>
+    <updated>2017-12-24T17:59:44.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;script async class=&quot;speakerdeck-embed&quot; data-id=&quot;d37465938585416fbd2f450cfc3a5919&quot; data-ratio=&quot;1.77777777777778&quot;
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="test-corner" scheme="https://blog.littlelin.me/tags/test-corner/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[社群分享] SpecFlow 實務經驗分享 @ Test Corner</title>
+    <link href="https://blog.littlelin.me/2017/04/20/specflow-shi-wu-jing-yan-fen-xiang/"/>
+    <id>https://blog.littlelin.me/2017/04/20/specflow-shi-wu-jing-yan-fen-xiang/</id>
+    <published>2017-04-20T15:00:00.000Z</published>
+    <updated>2017-12-24T18:00:30.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;script async class=&quot;speakerdeck-embed&quot; data-id=&quot;c24b7c79868c45dea3fced52f5cb7010&quot; data-ratio=&quot;1.77777777777778&quot;
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="test-corner" scheme="https://blog.littlelin.me/tags/test-corner/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[翻譯] TDD 已死，測試萬歲</title>
+    <link href="https://blog.littlelin.me/2014/04/26/tdd-is-dead-long-live-testing/"/>
+    <id>https://blog.littlelin.me/2014/04/26/tdd-is-dead-long-live-testing/</id>
+    <published>2014-04-26T09:20:00.000Z</published>
+    <updated>2017-12-25T06:00:10.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;img src=&quot;https://farm1.staticflickr.com/164/427255017_305fb49638.jpg&quot; width=&quot;500&quot; alt=&quot;Blue pill or the red pill&quot; data-height=&quot;287&quot;&gt;
+
+&lt;h3 id=&quot;2014-04-28-Updates&quot;&gt;&lt;a href=&quot;#2014-04-28-Updates&quot; class=&quot;headerlink&quot; title=&quot;2014/04/28 Updates&quot;&gt;&lt;/a&gt;2014/04/28 Updates&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;補上 DHH 原始 keynote 的影片︰&lt;a href=&quot;http://www.justin.tv/confreaks/b/522089408&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;RailsConf2014 Opening Keynote by DHH&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Uncle Bob 針對 DHH 的戰文，也寫了一篇文章來反擊︰&lt;a href=&quot;http://blog.8thlight.com/uncle-bob/2014/04/25/MonogamousTDD.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Monogamous TDD&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://xdite.net/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;XDite&lt;/a&gt; 在 4/28 也再撰文整理他的看法︰&lt;a href=&quot;http://blog.xdite.net/posts/2014/04/28/back-to-basic&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;返璞歸真 – 以最適當的方式設計軟體&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;昨天在 &lt;a href=&quot;http://xdite.net/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;XDite&lt;/a&gt; 大大的 Blog 中 (via: &lt;a href=&quot;http://blog.xdite.net/posts/2014/04/25/railsconf-2014-2&quot; title=&quot;RailsConf 2014 - 十週年紀念版 ( 中 )&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;RailsConf 2014 - 十週年紀念版 ( 中 )&lt;/a&gt;)，看到 RoR framework、Basecamp 公司的創辦人、&lt;a href=&quot;http://37signals.com/rework/&quot; title=&quot;Rework&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Rework 一書&lt;/a&gt; (中譯書︰&lt;a href=&quot;http://findbook.tw/book/9789862166055/basic&quot; title=&quot;工作大解放&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;工作大解放&lt;/a&gt;) 的作者，David Heinemeier Hansson (DHH)，在 RailsConf 2014 中的 Keynote 後，發表了一篇針對 TDD 的戰文︰&lt;a href=&quot;http://david.heinemeierhansson.com/2014/tdd-is-dead-long-live-testing.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;TDD is dead. Long live testing.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;其實我覺得 &lt;a href=&quot;http://xdite.net/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;XDite&lt;/a&gt; 整理 DHH 的 talk 重點就非常完整了，雖然我自己也是 TDD 的愛好者，但像這種由業界大神所寫出來的戰文，我覺得都有很高的閱讀價值。就算對方立場和你是相反的，從對方的論點中也可以找出滿多的檢查點，來反思自己在實踐上，是不是也犯了他們所討厭的錯誤，或是從錯誤的出發點來想事情。&lt;/p&gt;
+&lt;p&gt;所以我翻譯了這篇文章，除了讓自己再精讀一下 DHH 的想法外，也讓有興趣的朋友們可以多了解不同的意見，做為反思。&lt;/p&gt;
+&lt;p&gt;有任何翻譯上的謬誤，都歡迎提出，謝謝！&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="翻譯" scheme="https://blog.littlelin.me/tags/%E7%BF%BB%E8%AD%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[翻譯] 該如何與軟體開發團隊溝通，請他們加班以讓專案如期上線呢？</title>
+    <link href="https://blog.littlelin.me/2013/08/25/quora-translation-how-to-make-them-work-overtime-to-reach-launch-date/"/>
+    <id>https://blog.littlelin.me/2013/08/25/quora-translation-how-to-make-them-work-overtime-to-reach-launch-date/</id>
+    <published>2013-08-25T04:21:34.000Z</published>
+    <updated>2017-12-26T15:50:56.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;img src=&quot;https://farm1.staticflickr.com/95/264753162_e4218dda07.jpg&quot; width=&quot;500&quot; alt=&quot;Clock&quot; data-height=&quot;333&quot;&gt;
+
+&lt;h2 id=&quot;說明&quot;&gt;&lt;a href=&quot;#說明&quot; class=&quot;headerlink&quot; title=&quot;說明&quot;&gt;&lt;/a&gt;說明&lt;/h2&gt;&lt;p&gt;最近在 &lt;a href=&quot;http://www.quora.com&quot; title=&quot;Quora&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Quora&lt;/a&gt; 上看到了一個有趣的問題，&lt;a href=&quot;http://www.quora.com/Software-Engineering/What-is-the-best-way-to-communicate-to-a-software-development-team-that-they-need-to-work-more-hours-to-meet-a-launch-date&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;What is the best way to communicate to a software development team that they need to work more hours to meet a launch date? &lt;/a&gt; (該如何與軟體開發團隊溝通，請他們加班以讓專案如期上線呢？)&lt;/p&gt;
+&lt;p&gt;問題原文如下︰&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;My team has a launch date two months out that we need to hit. Over the past year I’ve been comfortable with them working 40 hours per week, but momentum is slipping with vacations, early weekends, etc. I need to communicate that they need to step up their effort and work more hours per week until we launch.&lt;br&gt;我的團隊有一個專案要在兩個月後上線，在過去一年，我與我的團隊每週工作 40 小時，但專案進度因為假期等因素而有所滑落。我需要與團隊溝通，請他們每週工作更長的工時，直到專案正式上線為止。&lt;/p&gt;
+&lt;p&gt;My question is specifically about the best way to communicate this request.&lt;br&gt;具體來說，我的問題是，我該怎麼向我的團隊溝通這樣的需求呢？&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;就問題來看，發問者在團隊中應該擔任的是類似 PM 的角色，而發問的內容在實務上也很常見，所以引起了不少人的回覆。其中在眾多答案中，評分最高的，也是最引起我共鳴的答案，是由前 &lt;a href=&quot;http://www.quora.com&quot; title=&quot;Quora&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Quora&lt;/a&gt; 工程師 &lt;a href=&quot;http://www.quora.com/Edmond-Lau&quot; title=&quot;Edmond-Lau&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Edmond Lau&lt;/a&gt; 所提供的 (&lt;a href=&quot;http://www.quora.com/Software-Engineering/What-is-the-best-way-to-communicate-to-a-software-development-team-that-they-need-to-work-more-hours-to-meet-a-launch-date/answer/Edmond-Lau?srid=3fgj&amp;share=1&quot; title=&quot;Quora&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;答案連結&lt;/a&gt;)。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.quora.com/Edmond-Lau&quot; title=&quot;Edmond-Lau&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Edmond Lau&lt;/a&gt; 在回覆中，說明為什麼他認為超時工作不可行，並且分享了他個人在過去專案執行中，所遇到的慘痛經驗。整個答案內文比原始的問題內文要長得多，但又非常實務且有趣。我在讀了之後覺得非常喜歡，所以想說就乾脆把它翻譯出來好了，希望也帶給遭遇類似問題的朋友一些思考。&lt;/p&gt;
+&lt;p&gt;要說明的是，我不是專業的譯者，所以對於內文的翻譯，或許有錯誤或是不到位的地方 (這很有可能發生)，都非常歡迎大家指正。如果有相關的經驗可以一起分享的話，那就更好了，這也是一開始我翻譯這篇答案內文，希望帶給大家的幫助。&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="翻譯" scheme="https://blog.littlelin.me/tags/%E7%BF%BB%E8%AD%AF/"/>
+    
+  </entry>
+  
+</feed>

@@ -89,12 +89,20 @@
   <div class="article-content">
     <div class="entry">
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在前 2 篇文章中，我整理了自己常使用的測試技巧 (<a href="/2017/10/31/mstest-1-basic/">第一篇</a>、<a href="/2017/11/01/mstest-2-test-doubles/">第二篇</a>)，本文繼續來整理一些實務撰寫測試上有用的小技巧，其中有些技巧是屬於 MSTest 這個測試框架專屬的行為。</p>
+        <h2><span id="前言">前言</span></h2><p>在前 2 篇文章中，我整理了自己常使用的測試技巧 (<a href="/2017/10/31/mstest-1-basic/">第一篇</a>、<a href="/2017/11/01/mstest-2-test-doubles/">第二篇</a>)，本文繼續來整理一些實務撰寫測試上有用的小技巧，其中有些技巧是屬於 MSTest 這個測試框架專屬的行為。</p>
 <a id="more"></a>
 
-<h2 id="目錄"><a href="#目錄" class="headerlink" title="目錄"></a>目錄</h2><!-- toc -->
+<h2><span id="目錄">目錄</span></h2><!-- toc -->
 
-<h2 id="6-當程式使用到日期資訊時該如何進行測試？"><a href="#6-當程式使用到日期資訊時該如何進行測試？" class="headerlink" title="6. 當程式使用到日期資訊時該如何進行測試？"></a>6. 當程式使用到日期資訊時該如何進行測試？</h2><p>我們在系統開發中，很常使用 <code>DateTime</code> 類別中的各種日期資訊，比方說我們在比對訂單是否逾期未出貨，或是客戶逾期未取貨等，都會使用到像 <code>DateTime.Now</code> 等屬性 API。</p>
+<ul>
+<li><a href="#6-當程式使用到日期資訊時該如何進行測試">6. 當程式使用到日期資訊時該如何進行測試？</a></li>
+<li><a href="#7-如何部署測試需要的檔案">7. 如何部署測試需要的檔案？</a></li>
+<li><a href="#8-如何讓測試以平行處理方式執行">8. 如何讓測試以平行處理方式執行？</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="6-當程式使用到日期資訊時該如何進行測試">6. 當程式使用到日期資訊時該如何進行測試？</span></h2><p>我們在系統開發中，很常使用 <code>DateTime</code> 類別中的各種日期資訊，比方說我們在比對訂單是否逾期未出貨，或是客戶逾期未取貨等，都會使用到像 <code>DateTime.Now</code> 等屬性 API。</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Order</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 下訂日期</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> DateTime OrderDate;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 是否為逾期未取貨訂單</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">bool</span> IsExpiredOrder</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> (DateTime.Now.Subtract(<span class="keyword">this</span>.OrderDate).Days &gt;= <span class="number">3</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 略...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>這時候當我們想要測試 2 種測試案例︰<em>逾期訂單</em>與<em>未逾期訂單時</em>時，可以想像因為 <code>DateTime.Now</code> 是系統當下時間，所以我們很難照我們的期待，指定日期 (1/3 或 1/4) 來進行測試︰</p>
@@ -110,7 +118,7 @@
 <p>如此針對日期資訊這種使用範圍如此廣的物件，我們就可以使用比較清楚的方式進行測試。針對這個議題，<a href="https://stackoverflow.com" target="_blank" rel="noopener">StackOverflow</a> 上的 <a href="https://stackoverflow.com/questions/2425721/unit-testing-datetime-now" target="_blank" rel="noopener">Unit Testing: DateTime.Now</a> 討論串，也非常推薦一讀。</p>
 <p>另外可以留意，我在上面的測試中加入 Cleanup 的程式，確保在每個 unit test 執行完成後，將 <code>PredefinedDate</code> 日期資訊給歸零，以避免各個 test case 間彼此間互相影響。</p>
 <p><a href="#目錄">回到目錄</a></p>
-<h2 id="7-如何部署測試需要的檔案？"><a href="#7-如何部署測試需要的檔案？" class="headerlink" title="7. 如何部署測試需要的檔案？"></a>7. 如何部署測試需要的檔案？</h2><p>有時候我們在測試前，需要部署測試需要的檔案。比方說未來我們會提到的 <a href="https://docs.microsoft.com/zh-tw/sql/database-engine/configure-windows/sql-server-2016-express-localdb" target="_blank" rel="noopener">SQL Server LocalDB</a>，通常在使用上，會先將測試資料庫 .mdf 檔先部署上測試資料夾，再啟動 LocalDB instance。這時候我們該怎麼設定呢？</p>
+<h2><span id="7-如何部署測試需要的檔案">7. 如何部署測試需要的檔案？</span></h2><p>有時候我們在測試前，需要部署測試需要的檔案。比方說未來我們會提到的 <a href="https://docs.microsoft.com/zh-tw/sql/database-engine/configure-windows/sql-server-2016-express-localdb" target="_blank" rel="noopener">SQL Server LocalDB</a>，通常在使用上，會先將測試資料庫 .mdf 檔先部署上測試資料夾，再啟動 LocalDB instance。這時候我們該怎麼設定呢？</p>
 <p>在 MSTest，我們可以使用測試設定檔來達成這個目標。以下為 Visual Studio 的操作︰</p>
 <p>假設我們的測試專案中，有個 <code>TestMaterials\</code> 資料夾，內含我們所需要的測試檔︰</p>
 <img src="/2018/01/06/mstest-3-miscellaneous/TestProjectStructure.png">
@@ -144,7 +152,7 @@
 <img src="/2018/01/06/mstest-3-miscellaneous/DeploymentResult.png">
 
 <p><a href="#目錄">回到目錄</a></p>
-<h2 id="8-如何讓測試以平行處理方式執行？"><a href="#8-如何讓測試以平行處理方式執行？" class="headerlink" title="8. 如何讓測試以平行處理方式執行？"></a>8. 如何讓測試以平行處理方式執行？</h2><p>當我們測試程式越寫越多，這時候我們就會發現測試專案的執行時間越來越長，尤其當我們的測試程式不再單純是單元測試，而是牽扯到網路或是資料庫的整合測試時，測試程式執行的時間就會隨著測試案例數量的成長而拉長。我們有沒有什麼辦法可以加速測試專案的執行時間呢？</p>
+<h2><span id="8-如何讓測試以平行處理方式執行">8. 如何讓測試以平行處理方式執行？</span></h2><p>當我們測試程式越寫越多，這時候我們就會發現測試專案的執行時間越來越長，尤其當我們的測試程式不再單純是單元測試，而是牽扯到網路或是資料庫的整合測試時，測試程式執行的時間就會隨著測試案例數量的成長而拉長。我們有沒有什麼辦法可以加速測試專案的執行時間呢？</p>
 <p>針對這個議題，MSTest 提供了讓測試專案可以平行處理執行(Parallel Execute) 的能力，讓我們先假設我們有 2 個測試案例，當中非常單純，就是使用 <code>Thread.Sleep()</code> API 各自睡眠 10 秒鐘︰</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TestClass</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UnitTest1</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">TestMethod</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestMethod1</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Thread.Sleep(<span class="number">10000</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">TestMethod</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestMethod2</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Thread.Sleep(<span class="number">10000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -163,7 +171,7 @@
 <p>最後需要留意的是，雖然技術上我們可以平行處理方式來執行測試案例，但實際上要開啟這樣的設定，必須確保我們的測試案例，彼此間是 Thread-safe 的，這就進一步考驗我們對於整個測試專案的架構設計能力。</p>
 <p>比方我們在 <a href="#6-當程式使用到日期資訊時該如何進行測試">6. 當程式使用到日期資訊時該如何進行測試？</a> 一節中，針對時間 <code>DateTime</code> 隔離的做法，在多執行緒的狀況下，測試案例間彼此可能就會互相干擾。這方面相關的考量非常多，在此就不展開，留待未來再做說明吧。</p>
 <p><a href="#目錄">回到目錄</a></p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ol>
+<h2><span id="references">References</span></h2><ol>
 <li><a href="https://www.manning.com/books/the-art-of-unit-testing-second-edition" target="_blank" rel="noopener">The Art of Unit Testing</a></li>
 <li><a href="https://stackoverflow.com/questions/2425721/unit-testing-datetime-now" target="_blank" rel="noopener">Unit Testing: DateTime.Now</a></li>
 <li><a href="https://msdn.microsoft.com/en-us/library/ms182475.aspx" target="_blank" rel="noopener">How to: Deploy Files for Tests</a></li>
