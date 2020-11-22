@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Linson&#39;s Note</title>
+  <title>LittleLin&#39;s Scrapbook</title>
   
   
   <link href="/atom.xml" rel="self"/>
@@ -43,27 +43,6 @@
   </entry>
   
   <entry>
-    <title>使用 MSTest 撰寫單元測試套路整理(3) - 拾遺補缺</title>
-    <link href="https://blog.littlelin.me/2018/01/06/mstest-3-miscellaneous/"/>
-    <id>https://blog.littlelin.me/2018/01/06/mstest-3-miscellaneous/</id>
-    <published>2018-01-06T06:00:00.000Z</published>
-    <updated>2018-01-07T07:39:42.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;在前 2 篇文章中，我整理了自己常使用的測試技巧 (&lt;a href=&quot;/2017/10/31/mstest-1-basic/&quot;&gt;第一篇&lt;/a&gt;、&lt;a href=&quot;/2017/11/01/mstest-2-test-doubles/&quot;&gt;第二篇&lt;/a&gt;)，本文繼續來整理一些實務撰寫測試上有用的小技巧，其中有些技巧是屬於 MSTest 這個測試框架專屬的行為。&lt;/p&gt;
-    
-    </summary>
-    
-    
-    
-      <category term="Unit Test" scheme="https://blog.littlelin.me/tags/Unit-Test/"/>
-    
-      <category term="MSTest" scheme="https://blog.littlelin.me/tags/MSTest/"/>
-    
-  </entry>
-  
-  <entry>
     <title>從 Evernote 搬家到 Bear</title>
     <link href="https://blog.littlelin.me/2018/01/01/moving-from-evernote-to-bear-writer/"/>
     <id>https://blog.littlelin.me/2018/01/01/moving-from-evernote-to-bear-writer/</id>
@@ -95,49 +74,6 @@
     </summary>
     
     
-    
-  </entry>
-  
-  <entry>
-    <title>使用 MSTest 撰寫單元測試套路整理 (2) - 處理物件相依</title>
-    <link href="https://blog.littlelin.me/2017/11/01/mstest-2-test-doubles/"/>
-    <id>https://blog.littlelin.me/2017/11/01/mstest-2-test-doubles/</id>
-    <published>2017-11-01T06:00:00.000Z</published>
-    <updated>2017-12-29T01:56:54.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;本篇文章主要是針對測試替身 (Test Doubles) 測試方式的一些套路技巧說明。&lt;/p&gt;
-    
-    </summary>
-    
-    
-    
-      <category term="Unit Test" scheme="https://blog.littlelin.me/tags/Unit-Test/"/>
-    
-      <category term="MSTest" scheme="https://blog.littlelin.me/tags/MSTest/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>使用 MSTest 撰寫單元測試套路整理 (1) - 基本技巧</title>
-    <link href="https://blog.littlelin.me/2017/10/31/mstest-1-basic/"/>
-    <id>https://blog.littlelin.me/2017/10/31/mstest-1-basic/</id>
-    <published>2017-10-31T06:46:46.000Z</published>
-    <updated>2019-09-15T03:02:23.239Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Visual Studio 內建的 &lt;a href=&quot;https://docs.microsoft.com/en-us/visualstudio/test/unit-test-your-code&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;MSTest 測試框架(test framework)&lt;/a&gt;，是目前我在工作上使用的主力。當然相較社群愛用的 &lt;a href=&quot;https://xunit.github.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;xUnit&lt;/a&gt;、&lt;a href=&quot;http://nunit.org/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;NUnit&lt;/a&gt; 來說，它的功能上有點過於陽春，但搭配一些好用的社群 library，它仍然可以完成我工作上大部份的需求。&lt;/p&gt;
-&lt;p&gt;最近因為部門有許多新人來報到，有許多關於測試上的 FAQ。被問多了，讓我產生整理 MsTest 在撰寫單元測試上一些方式的想法。當然這些都是套路，只是程式碼，實務上究竟要怎麼利用這些技巧，還是要依照專案的情境做調整。這才是最考驗工程師能力的地方，也是未來可以自我修養的部份。&lt;/p&gt;
-    
-    </summary>
-    
-    
-    
-      <category term="Unit Test" scheme="https://blog.littlelin.me/tags/Unit-Test/"/>
-    
-      <category term="MSTest" scheme="https://blog.littlelin.me/tags/MSTest/"/>
     
   </entry>
   
