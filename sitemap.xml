@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.littlelin.me/about/index.html</loc>
+    
+    <lastmod>2020-11-22T07:56:16.702Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.littlelin.me/2018/03/25/mysql-server-with-ssl-on-mac/</loc>
     
     <lastmod>2019-09-15T03:03:33.175Z</lastmod>
@@ -19,13 +26,6 @@
     <loc>https://blog.littlelin.me/2017/12/23/hello-world/</loc>
     
     <lastmod>2017-12-30T06:36:38.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.littlelin.me/about/index.html</loc>
-    
-    <lastmod>2017-12-27T07:12:42.000Z</lastmod>
     
   </url>
   
